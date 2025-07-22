@@ -7,6 +7,7 @@ import CycleIcon from "../icons/cycle-icon";
 
 export default function Cycling() {
   const [isSilent, setIsSilent] = useState(false);
+  const [distance, setDistance] = useState(1.2);
 
   // useEffect(() => {
   //   const id = setTimeout(() => {
@@ -16,11 +17,25 @@ export default function Cycling() {
   //   return () => clearTimeout(id);
   // }, [isSilent]);
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      setDistance((d) => d + 0.1);
+    }, 4000);
+
+    return () => clearInterval(id);
+  }, []);
+
+  const distanceArray = distance
+    .toFixed(1)
+    .toString()
+    .padStart(2, "0")
+    .split("");
+
   return (
     <motion.div
       initial={false}
-      className="relative flex h-7 items-center justify-between px-4 py-1.5"
-      animate={{ width: isSilent ? 148 : 128 }}
+      className="relative flex h-[32px] items-center justify-between px-2.5"
+      animate={{ width: 148 }}
       transition={{ type: "spring", bounce: 0.5 }}
     >
       <AnimatePresence>
@@ -38,12 +53,27 @@ export default function Cycling() {
         </motion.div>
       </AnimatePresence>
       <div className="ml-auto flex items-center">
-        <span className="text-xs font-medium text-[#9EFE00]">
-          1.9{" "}
-          <sup className="text-[8px] font-normal text-[#9EFE00] -left-[3px]">
-            MI
-          </sup>
-        </span>
+        <div className="text-xs font-medium text-[#9EFE00]">
+          <AnimatePresence initial={false} mode="popLayout">
+            {distanceArray.map((n, i) => (
+              <motion.div
+                className="inline-block tabular-nums"
+                key={n + i}
+                initial={{ y: "12px", filter: "blur(2px)", opacity: 0 }}
+                animate={{ y: "0", filter: "blur(0px)", opacity: 1 }}
+                exit={{ y: "-12px", filter: "blur(2px)", opacity: 0 }}
+                transition={{
+                  type: "spring",
+                  bounce: 0.25,
+                  visualDuration: 0.5,
+                }}
+              >
+                {n}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          <sup className="text-[8px] font-normal text-[#9EFE00]">MI</sup>
+        </div>
       </div>
     </motion.div>
   );

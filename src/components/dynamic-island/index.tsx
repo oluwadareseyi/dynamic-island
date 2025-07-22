@@ -3,9 +3,9 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Transition, Variants } from "motion/react";
-import { Ring } from "./ring";
 import { Timer } from "./timer";
 import Cycling from "./cycling";
+import { Calling } from "./calling";
 
 export default function DynamicIsland() {
   const [view, setView] = useState("idle");
@@ -14,15 +14,17 @@ export default function DynamicIsland() {
 
   const content = useMemo(() => {
     switch (view) {
-      case "ring":
-        return <Ring />;
       case "timer":
         return <Timer />;
       case "cycle":
         return <Cycling />;
+      case "calling":
+        return <Calling setIdle={() => setView("idle")} />;
       case "idle":
-        return <div className="h-7 w-[100px]" />;
+        return <div className="h-[32px] w-[128px]" />;
     }
+
+    console.log(view);
   }, [view]);
 
   return (
@@ -42,10 +44,10 @@ export default function DynamicIsland() {
             style={{ borderRadius: "9999px" }}
             className="bg-black"
             initial={{ x: 0 }}
-            animate={{ x: splitMode ? "-10px" : 0 }}
+            animate={{ x: splitMode ? "-21px" : 0 }}
             transition={{
-              delay: 0.1,
-              duration: 1.85,
+              // delay: 0.1,
+              duration: 1.5,
               type: "spring",
               bounce: 0.35,
             }}
@@ -79,21 +81,40 @@ export default function DynamicIsland() {
             </motion.div>
           </motion.div>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             {splitMode && (
               <motion.div
                 key="icon"
-                className="absolute top-0 right-0 h-full aspect-square rounded-full bg-black z-[-1]"
+                className="absolute top-0 right-0 h-full aspect-square rounded-full bg-black z-[-1] flex items-center justify-center"
                 initial={{ x: -50, opacity: 0 }}
-                animate={{ x: "100%", opacity: 1 }}
+                animate={{ x: "calc(50% + 10px)", opacity: 1 }}
                 exit={{ x: -50, opacity: 0 }}
                 transition={{
-                  delay: 0.1,
-                  duration: 1.85,
+                  // delay: 0.1,
+                  duration: 1.5,
                   type: "spring",
                   bounce: 0.35,
                 }}
-              ></motion.div>
+              >
+                <motion.svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="15"
+                  viewBox="0 0 18 15"
+                  fill="none"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: 0.35,
+                  }}
+                >
+                  <path
+                    fill="#90C9F9"
+                    d="M1.731 14.703c.563 0 .94-.395.94-.958 0-.334-.025-.677-.025-1.16 0-2.953 1.037-4.148 3.963-4.148h5.704l2.101-.132-2.62 2.39-1.959 1.978a.955.955 0 0 0-.281.685c0 .528.395.923.949.923.237 0 .474-.096.685-.299L16.98 8.19a.974.974 0 0 0 .317-.72.988.988 0 0 0-.317-.721L11.206.975c-.229-.211-.466-.317-.703-.317-.554 0-.95.396-.95.923 0 .273.106.51.282.686l1.96 1.986 2.61 2.382-2.091-.123H6.485c-4.069 0-5.783 1.872-5.783 6.011 0 .519.018.967.088 1.319.08.422.343.861.94.861Z"
+                  />
+                </motion.svg>
+              </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
@@ -116,13 +137,16 @@ export default function DynamicIsland() {
           </AnimatePresence>
         </div>
         <div className="flex w-full justify-center gap-4">
-          {["idle", "ring", "timer", "cycle"].map((v) => (
+          {["idle", "cycle", "calling", "timer"].map((v) => (
             <button
               type="button"
-              className="rounded-full capitalize w-32 h-10 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300/50 hover:bg-gray-50"
+              className="rounded-full capitalize h-10 bg-white px-6 py-1.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300/50 hover:bg-gray-50"
               onClick={() => {
                 setView(v);
                 setVariantKey(`${view}-${v}`);
+                if (v === "timer") {
+                  setSplitMode(false);
+                }
               }}
               key={v}
             >
@@ -131,7 +155,8 @@ export default function DynamicIsland() {
           ))}
           <button
             type="button"
-            className="rounded-full capitalize w-32 h-10 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300/50 hover:bg-gray-50"
+            className="rounded-full capitalize h-10 bg-white px-6 py-1.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300/50 hover:bg-gray-50"
+            disabled={view === "timer"}
             onClick={() => setSplitMode(!splitMode)}
           >
             Split Mode
@@ -153,22 +178,22 @@ const variants = {
 };
 
 const ANIMATION_VARIANTS = {
-  "ring-idle": {
+  "cycle-idle": {
     scale: 0.9,
     scaleX: 0.9,
     bounce: 0.5,
   },
-  "timer-ring": {
+  "calling-cycle": {
     scale: 0.7,
     y: -7.5,
     bounce: 0.35,
   },
-  "ring-timer": {
+  "cycle-calling": {
     scale: 1.4,
     y: 7.5,
     bounce: 0.35,
   },
-  "timer-idle": {
+  "calling-idle": {
     scale: 0.7,
     y: -7.5,
     bounce: 0.3,
@@ -177,10 +202,10 @@ const ANIMATION_VARIANTS = {
 
 const BOUNCE_VARIANTS = {
   idle: 0.5,
-  "ring-idle": 0.5,
-  "timer-ring": 0.35,
-  "ring-timer": 0.35,
-  "timer-idle": 0.3,
-  "idle-timer": 0.3,
-  "idle-ring": 0.5,
+  "cycle-idle": 0.5,
+  "calling-cycle": 0.35,
+  "cycle-calling": 0.35,
+  "calling-idle": 0.3,
+  "idle-calling": 0.3,
+  "idle-cycle": 0.5,
 };
