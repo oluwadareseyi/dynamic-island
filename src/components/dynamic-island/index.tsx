@@ -3,9 +3,11 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Transition, Variants } from "motion/react";
-import { Timer } from "./timer";
 import Cycling from "./cycling";
 import { Calling } from "./calling";
+import { Recording } from "./recording";
+
+const views = ["idle", "cycle", "calling", "recording"];
 
 export default function DynamicIsland() {
   const [view, setView] = useState("idle");
@@ -14,12 +16,12 @@ export default function DynamicIsland() {
 
   const content = useMemo(() => {
     switch (view) {
-      case "timer":
-        return <Timer />;
+      case "recording":
+        return <Recording />;
       case "cycle":
         return <Cycling />;
       case "calling":
-        return <Calling setIdle={() => setView("idle")} />;
+        return <Calling />;
       case "idle":
         return <div className="h-[32px] w-[128px]" />;
     }
@@ -28,7 +30,7 @@ export default function DynamicIsland() {
   }, [view]);
 
   return (
-    <div className="h-[200px]">
+    <div className="h-[280px] p-10 relative">
       <div className="relative flex h-full w-full flex-col justify-between items-center">
         <motion.div
           layout
@@ -137,14 +139,14 @@ export default function DynamicIsland() {
           </AnimatePresence>
         </div>
         <div className="flex w-full justify-center gap-4">
-          {["idle", "cycle", "calling", "timer"].map((v) => (
+          {views.map((v) => (
             <button
               type="button"
               className="rounded-full capitalize h-10 bg-white px-6 py-1.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300/50 hover:bg-gray-50"
               onClick={() => {
                 setView(v);
                 setVariantKey(`${view}-${v}`);
-                if (v === "timer") {
+                if (v === "recording" || v === "calling") {
                   setSplitMode(false);
                 }
               }}
@@ -156,7 +158,7 @@ export default function DynamicIsland() {
           <button
             type="button"
             className="rounded-full capitalize h-10 bg-white px-6 py-1.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300/50 hover:bg-gray-50"
-            disabled={view === "timer"}
+            disabled={view === "recording" || view === "calling"}
             onClick={() => setSplitMode(!splitMode)}
           >
             Split Mode
@@ -198,14 +200,33 @@ const ANIMATION_VARIANTS = {
     y: -7.5,
     bounce: 0.3,
   },
+  "recording-cycle": {
+    scale: 0.7,
+    y: -7.5,
+    bounce: 0.35,
+  },
+  "cycle-recording": {
+    scale: 1.4,
+    y: 7.5,
+    bounce: 0.35,
+  },
+  "recording-idle": {
+    scale: 0.7,
+    y: -7.5,
+    bounce: 0.3,
+  },
 };
 
 const BOUNCE_VARIANTS = {
   idle: 0.5,
   "cycle-idle": 0.5,
+  "idle-cycle": 0.5,
   "calling-cycle": 0.35,
   "cycle-calling": 0.35,
   "calling-idle": 0.3,
   "idle-calling": 0.3,
-  "idle-cycle": 0.5,
+  "recording-cycle": 0.35,
+  "cycle-recording": 0.35,
+  "recording-idle": 0.3,
+  "idle-recording": 0.3,
 };

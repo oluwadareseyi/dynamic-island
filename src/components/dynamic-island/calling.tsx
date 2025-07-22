@@ -1,13 +1,9 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-type CallingProps = {
-  setIdle: () => void;
-};
-
-export function Calling({ setIdle }: CallingProps) {
+export function Calling() {
   return (
-    <div className="flex w-[284px] items-center gap-2 py-3 pl-3.5 pr-5">
+    <div className="flex w-[320px] items-center gap-2 py-3 pl-3.5 pr-5">
       <div className="flex items-center gap-2 mr-auto">
         <div className="w-10 h-10 rounded-full overflow-hidden">
           <img
@@ -30,7 +26,6 @@ export function Calling({ setIdle }: CallingProps) {
         aria-label="End call"
         whileTap={{ scale: 0.9 }}
         className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FA3532] transition-colors hover:bg-[#FA3532]/95"
-        onClick={setIdle}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

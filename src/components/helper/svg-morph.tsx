@@ -7,7 +7,6 @@ import {
   useMotionValue,
   useTransform,
   AnimationPlaybackControls,
-  cubicBezier,
 } from "motion/react";
 
 //  i want it to take all the path attributes as props
