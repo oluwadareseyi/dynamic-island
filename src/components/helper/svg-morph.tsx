@@ -1,7 +1,14 @@
 "use client";
 import { interpolate } from "flubber";
 import React, { useState, useEffect } from "react";
-import { motion, animate, useMotionValue, useTransform } from "motion/react";
+import {
+  motion,
+  animate,
+  useMotionValue,
+  useTransform,
+  AnimationPlaybackControls,
+  cubicBezier,
+} from "motion/react";
 
 //  i want it to take all the path attributes as props
 
@@ -12,30 +19,40 @@ export default function SVGMorph({
 }: { paths: string[]; delay?: number } & React.SVGProps<SVGPathElement>) {
   const [pathIndex, setPathIndex] = useState(0);
   const progress = useMotionValue(pathIndex);
+  const [first, setFirst] = useState(false);
 
   const arrayOfIndex = paths.map((_, i) => i);
   const path = useTransform(progress, arrayOfIndex, paths, {
-    mixer: (a, b) => interpolate(a, b, { maxSegmentLength: 5 }),
+    mixer: (a, b) => interpolate(a, b, { maxSegmentLength: 6 }),
   });
 
   useEffect(() => {
-    const animation = animate(progress, pathIndex, {
-      duration: 0.2,
-      ease: "easeInOut",
-      onComplete: () => {
-        if (pathIndex === paths.length - 1) {
-          progress.set(0);
-          setPathIndex(1);
-        } else {
-          setPathIndex(pathIndex + 1);
-        }
+    let animation: AnimationPlaybackControls;
+
+    const timeout = setTimeout(
+      () => {
+        animation = animate(progress, pathIndex, {
+          duration: 0.5,
+          ease: "easeInOut",
+          onComplete: () => {
+            setFirst(true);
+            if (pathIndex === paths.length - 1) {
+              progress.set(0);
+              setPathIndex(1);
+            } else {
+              setPathIndex(pathIndex + 1);
+            }
+          },
+          onUpdate: (latest) => {
+            // console.log(animation.duration);
+          },
+        });
       },
-      onUpdate: (latest) => {
-        // console.log(animation.duration);
-      },
-    });
+      first ? 0 : 500
+    );
     return () => {
-      animation.stop();
+      clearTimeout(timeout);
+      // animation?.stop();
     };
   }, [pathIndex]);
 

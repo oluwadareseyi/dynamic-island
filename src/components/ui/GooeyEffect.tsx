@@ -1,21 +1,16 @@
 const GooeyEffect = () => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      version="1.1"
-      aria-hidden="true"
-      className="absolute"
-    >
+    <svg aria-hidden="true" className="absolute">
       <defs>
         <filter id="goo">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
           <feColorMatrix
             in="blur"
-            mode="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+            type="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
             result="goo"
           />
-          <feBlend in="SourceGraphic" in2="goo" />
+          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
         </filter>
       </defs>
     </svg>

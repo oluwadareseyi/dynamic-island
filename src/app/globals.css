@@ -7,6 +7,10 @@ body {
   background: #fdfdfc;
 }
 
-#back-leg {
+#left-leg {
   opacity: 0.5;
+}
+
+.wrapper {
+  filter: url("#goo");
 }

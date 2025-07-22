@@ -17,6 +17,7 @@ export function Ring() {
 
   return (
     <motion.div
+      initial={false}
       className="relative flex h-7 items-center justify-between px-2.5"
       animate={{ width: isSilent ? 148 : 128 }}
       transition={{ type: "spring", bounce: 0.5 }}

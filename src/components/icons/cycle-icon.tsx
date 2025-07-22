@@ -1,7 +1,7 @@
 "use client";
 
 import SVGMorph from "../helper/svg-morph";
-import { backLegPaths, frontLegPaths } from "./paths";
+import { leftLegPaths, rightLegPaths } from "./paths";
 
 const CycleIcon = () => {
   return (
@@ -35,10 +35,10 @@ const CycleIcon = () => {
             fill="#9EFE00"
           />
         </g>
-        <g id="back-leg">
-          <SVGMorph paths={backLegPaths} fill="#9EFE00" />
+        <g id="left-leg">
+          <SVGMorph paths={leftLegPaths} fill="#9EFE00" />
         </g>
-        <SVGMorph id="front-leg" fill="#9EFE00" paths={frontLegPaths} />
+        <SVGMorph id="right-leg" fill="#9EFE00" paths={rightLegPaths} />
       </g>
     </svg>
   );

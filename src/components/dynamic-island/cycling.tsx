@@ -18,13 +18,25 @@ export default function Cycling() {
 
   return (
     <motion.div
-      className="relative flex h-7 items-center justify-between px-2.5"
+      initial={false}
+      className="relative flex h-7 items-center justify-between px-4 py-1.5"
       animate={{ width: isSilent ? 148 : 128 }}
       transition={{ type: "spring", bounce: 0.5 }}
     >
-      <div className="h-[20px] w-[20px]">
-        <CycleIcon />
-      </div>
+      <AnimatePresence>
+        <motion.div
+          className="w-[18px]"
+          initial={{ opacity: 0, filter: "blur(4px)" }}
+          animate={{
+            opacity: 1,
+            filter: "blur(0px)",
+          }}
+          exit={{ opacity: 0, filter: "blur(4px)" }}
+          transition={{ type: "spring", bounce: 0.35 }}
+        >
+          <CycleIcon />
+        </motion.div>
+      </AnimatePresence>
       <div className="ml-auto flex items-center">
         <span className="text-xs font-medium text-[#9EFE00]">
           1.9{" "}
