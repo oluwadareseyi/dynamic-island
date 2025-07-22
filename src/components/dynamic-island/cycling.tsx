@@ -9,14 +9,6 @@ export default function Cycling() {
   const [isSilent, setIsSilent] = useState(false);
   const [distance, setDistance] = useState(1.2);
 
-  // useEffect(() => {
-  //   const id = setTimeout(() => {
-  //     setIsSilent((s) => !s);
-  //   }, 2000);
-
-  //   return () => clearTimeout(id);
-  // }, [isSilent]);
-
   useEffect(() => {
     const id = setInterval(() => {
       setDistance((d) => d + 0.1);
